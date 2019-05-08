@@ -9,6 +9,12 @@ from mltools import *
 
 
 
+def plot_imp(imp, x_names, ax):
+    imp = 100 * (imp / imp.max())
+    sorted_ind = np.argsort(imp)
+    ax.barh(x_names[sorted_ind], imp[sorted_ind], color='#635a4d')
+
+
 def run(filename):
     t_names = ['doc', 'no3', 'tn', 'tp']
     x_names = ['area', 'elev', 'forest', 'wetland', 'urban', 'ag', 'roads', 'pop']  # TODO: removed shrub and precip because if together everything has NA values

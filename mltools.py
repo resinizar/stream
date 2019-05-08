@@ -46,12 +46,6 @@ def svm(X_train, y_train, X_test, y_test, get_imp=False):
     return L1_tr, L2_tr, L1_ts, L2_ts, imp
 
 
-def plot_imp(imp, x_names, ax):
-    imp = 100 * (imp / imp.max())
-    sorted_ind = np.argsort(imp)
-    ax.barh(x_names[sorted_ind], imp[sorted_ind], color='#635a4d')
-
-
 def normalize(matrix):
     return (matrix - matrix.min(0)) / matrix.ptp(0)
 
