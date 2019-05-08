@@ -10,7 +10,7 @@ from mltools import *
 
 
 def plot_imp(imp, x_names, ax):
-    imp = 100 * (imp / imp.max())
+    imp = 100 * (imp / np.sum(imp))
     sorted_ind = np.argsort(imp)
     ax.barh(x_names[sorted_ind], imp[sorted_ind], color='#635a4d')
 
