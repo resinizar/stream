@@ -19,9 +19,9 @@ def train(clf, X_train, y_train, X_test, y_test, get_imp=False):
     L1_ts = np.average(np.abs(np.subtract(pred_test, y_test)))
     L2_ts = np.average(np.square(np.subtract(pred_test, y_test)))
     
-    with open('./output/pred.csv', 'a') as csvfile:
-        w = csv.writer(csvfile)
-        w.writerow(pred_test)
+    # with open('./output/pred.csv', 'a') as csvfile:
+    #     w = csv.writer(csvfile)
+    #     w.writerow(pred_test)
 
     imp = clf.feature_importances_ if get_imp else None
     
