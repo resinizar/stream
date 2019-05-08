@@ -15,11 +15,11 @@ def plot_imp(imp, x_names, ax):
     ax.barh(x_names[sorted_ind], imp[sorted_ind], color='#635a4d')
 
 
-def run(filename):
-    xs, ts, x_names, t_names = get_NLA_data()
+def run():
+    xs, ts, x_names, t_names = get_NRSA_data()
 
     f, axarr = plt.subplots(len(t_names), 2, sharex='col')
-    f.set_size_inches(11, 12)
+    f.set_size_inches(14, 20)
     axarr[0, 0].set_title('Random Forest')
     axarr[0, 1].set_title('Gradient Boosting')
     
@@ -47,5 +47,4 @@ def run(filename):
         
         
 if __name__ == '__main__':
-    import sys
     run()

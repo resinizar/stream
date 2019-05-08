@@ -41,11 +41,11 @@ def gbr(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
 
 def svm(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
     classifier = svmr.SVR(gamma='scale')
-    L1_tr, L2_tr, L1_ts, L2_ts, imp = train(classifier, X_train, y_train, X_test, y_test, False, writer)
-    return L1_tr, L2_tr, L1_ts, L2_ts, imp
+    L1_tr, L2_tr, L1_ts, L2_ts, _ = train(classifier, X_train, y_train, X_test, y_test, False, writer)
+    return L1_tr, L2_tr, L1_ts, L2_ts, None
 
 
-def rand(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
+def rd(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
     mean = np.average(y_train)
     stdev = np.std(y_train)
     pred_train = np.random.normal(mean, stdev, len(y_train))
@@ -88,7 +88,10 @@ def get_NLA_data():
     with open('./data/NLA07_mldata.csv', 'r') as data_file:
         df = pd.read_csv(data_file)
         df = df.drop(['sort', 'year', 'siteid', 'lat', 'long'], axis=1)  # drop columns I don't need
+        len_before = len(df)
         df = df.dropna()  # drop any rows with unknown values
+        print('Downloaded NLA data')
+        print('Dropped {} rows for a total of {}'.format(len_before - len(df), len(df)))
 
     xs = df.iloc[:, 4:]
     x_names = df.columns.values[4:]
@@ -105,7 +108,10 @@ def get_NRSA_data():
     with open('./data/NRSA08_mldata.csv', 'r') as data_file:
         df = pd.read_csv(data_file)
         df = df.drop(['sort', 'year', 'siteid', 'lat', 'long', 'epareg', 'strorder'], axis=1)  # drop columns I don't need
+        len_before = len(df)
         df = df.dropna()  # drop any rows with unknown values
+        print('Downloaded NRSA data')
+        print('Dropped {} rows for a total of {}'.format(len_before - len(df), len(df)))
 
     xs = df.iloc[:, 4:]
     x_names = df.columns.values[4:]
