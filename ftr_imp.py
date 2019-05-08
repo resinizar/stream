@@ -16,10 +16,7 @@ def plot_imp(imp, x_names, ax):
 
 
 def run(filename):
-    t_names = ['doc', 'no3', 'tn', 'tp']
-    x_names = ['area', 'elev', 'forest', 'wetland', 'urban', 'ag', 'roads', 'pop']  # TODO: removed shrub and precip because if together everything has NA values
-    
-    xs, ts = get_data(filename, x_names, t_names)
+    xs, ts, x_names, t_names = get_NLA_data()
 
     f, axarr = plt.subplots(len(t_names), 2, sharex='col')
     f.set_size_inches(11, 12)
@@ -51,5 +48,4 @@ def run(filename):
         
 if __name__ == '__main__':
     import sys
-    filename = sys.argv[1]
-    run(filename)
+    run()
