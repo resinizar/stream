@@ -6,7 +6,7 @@ from mltools import *
 
     
 def run():
-    models = [rf, gbr]
+    models = [rf, gbr, rand]
     k = 5
     xs, ts, x_names, t_names = get_NRSA_data()
     results = np.zeros((len(t_names), len(models), k, 4), dtype=np.float64)

@@ -45,6 +45,24 @@ def svm(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
     return L1_tr, L2_tr, L1_ts, L2_ts, imp
 
 
+def rand(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
+    mean = np.average(y_train)
+    stdev = np.std(y_train)
+    pred_train = np.random.normal(mean, stdev, len(y_train))
+    pred_test = np.random.normal(mean, stdev, len(y_test))
+
+    if writer:
+        writer.writerow(pred_test)
+
+    L1_tr = np.average(np.abs(np.subtract(pred_train, y_train)))
+    L2_tr = np.average(np.square(np.subtract(pred_train, y_train)))
+
+    L1_ts = np.average(np.abs(np.subtract(pred_test, y_test)))
+    L2_ts = np.average(np.square(np.subtract(pred_test, y_test)))
+
+    return L1_tr, L2_tr, L1_ts, L2_ts, None
+
+
 def normalize(matrix):
     return (matrix - matrix.min(0)) / matrix.ptp(0)
 
