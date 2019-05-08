@@ -4,6 +4,8 @@ from sklearn import svm as svmr
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 import csv
+from pdb import set_trace
+import matplotlib.pyplot as plt
 
 
 
@@ -42,6 +44,12 @@ def svm(X_train, y_train, X_test, y_test, get_imp=False):
     classifier = svmr.SVR(gamma='scale')
     L1_tr, L2_tr, L1_ts, L2_ts, imp = train(classifier, X_train, y_train, X_test, y_test, False)
     return L1_tr, L2_tr, L1_ts, L2_ts, imp
+
+
+def plot_imp(imp, x_names, ax):
+    imp = 100 * (imp / imp.max())
+    sorted_ind = np.argsort(imp)
+    ax.barh(x_names[sorted_ind], imp[sorted_ind], color='#635a4d')
 
 
 def normalize(matrix):

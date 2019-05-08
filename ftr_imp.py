@@ -14,10 +14,19 @@ def run(filename):
     x_names = ['area', 'elev', 'forest', 'wetland', 'urban', 'ag', 'roads', 'pop']  # TODO: removed shrub and precip because if together everything has NA values
     
     xs, ts = get_data(filename, x_names, t_names)
+
+    f, axarr = plt.subplots(len(t_names), 2, sharex='col')
+    f.set_size_inches(11, 12)
+    axarr[0, 0].set_title('Random Forest')
+    axarr[0, 1].set_title('Gradient Boosting')
     
-    for i in range(len(t_names)):  
-        rf_imps = []
-        gb_imps = []  
+    for i in range(len(t_names)): 
+        axarr[i, 0].annotate(t_names[i],xy=(0, 0.5), xytext=(-axarr[i, 0].yaxis.labelpad-5,0), 
+            xycoords=axarr[i, 0].yaxis.label, textcoords='offset points', 
+            size='large', ha='right', va='center')
+
+        rf_imps = np.zeros(len(x_names))
+        gb_imps = np.zeros(len(x_names))
         for _ in range(20):
             kf = KFold(n_splits=5, shuffle=True)
             for train_index, test_index in kf.split(xs):
@@ -25,24 +34,13 @@ def run(filename):
                 y_train, y_test = ts[train_index, i], ts[test_index, i]
                 _, _, _, _, rf_imp = rf(xs_train, y_train, xs_test, y_test, True)
                 _, _, _, _, gb_imp = gbr(xs_train, y_train, xs_test, y_test, True)
-                rf_inds = np.argpartition(rf_imp, -2)[-2:]
-                gb_inds = np.argpartition(gb_imp, -2)[-2:]
-                rf_imps.extend(np.array(x_names)[rf_inds])
-                gb_imps.extend(np.array(x_names)[gb_inds])
-        rf_count = Counter(rf_imps)
-        gb_count = Counter(gb_imps)
-                
-        rf_count = sorted(rf_count.items())
-        gb_count = sorted(gb_count.items())
-    
-        print('-----------')
-        print('target: {}'.format(t_names[i]))
-        print('-----------')
-        for ftr_name, freq in rf_count:
-            print('{}\t{}'.format(ftr_name, freq))
-        print('---')
-        for ftr_name, freq in gb_count:
-            print('{}\t{}'.format(ftr_name, freq))
+                rf_imps += rf_imp
+                gb_imps += gb_imp
+
+        plot_imp(rf_imps, np.array(x_names), axarr[i, 0])
+        plot_imp(gb_imps, np.array(x_names), axarr[i, 1])
+
+    f.savefig('./output/graphs/ftr_imp.png')
         
         
 if __name__ == '__main__':
