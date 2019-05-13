@@ -1,11 +1,7 @@
-import pandas as pd
 import numpy as np
 from sklearn import svm as svmr
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
-import csv
-from pdb import set_trace
-import matplotlib.pyplot as plt
 
 
 
@@ -28,13 +24,13 @@ def train(clf, X_train, y_train, X_test, y_test, get_imp=False, writer=None):
 
 
 def rf(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
-    forest = RandomForestRegressor(n_estimators=5)
+    forest = RandomForestRegressor(n_estimators=10)
     L1_tr, L2_tr, L1_ts, L2_ts, imp = train(forest, X_train, y_train, X_test, y_test, get_imp, writer)
     return L1_tr, L2_tr, L1_ts, L2_ts, imp
     
 
 def gbr(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
-    regressor = GradientBoostingRegressor(n_estimators=10)
+    regressor = GradientBoostingRegressor(n_estimators=50)
     L1_tr, L2_tr, L1_ts, L2_ts, imp = train(regressor, X_train, y_train, X_test, y_test, get_imp, writer)
     return L1_tr, L2_tr, L1_ts, L2_ts, imp
     
@@ -61,64 +57,3 @@ def rd(X_train, y_train, X_test, y_test, get_imp=False, writer=None):
     L2_ts = np.average(np.square(np.subtract(pred_test, y_test)))
 
     return L1_tr, L2_tr, L1_ts, L2_ts, None
-
-
-def normalize(matrix):
-    return (matrix - matrix.min(0)) / matrix.ptp(0)
-
-
-# def get_data(filename, x_col_names, t_col_names):
-#     with open(filename) as csvfile:
-#         df = pd.read_csv(csvfile)
-#         # print('num samples: {}'.format(df.shape))
-#     together = df[x_col_names + t_col_names]
-#     together = together.dropna()  # TODO: maybe impute some values later?
-#     # print('num samples after dropna: {}'.format(together.shape))
-    
-#     xs = together[x_col_names]
-#     ts = together[t_col_names]
-    
-#     xs = np.array(xs)
-#     ts = np.array(ts)
-    
-#     return normalize(xs), ts
-
-
-def get_NLA_data():
-    with open('./data/NLA07_mldata.csv', 'r') as data_file:
-        df = pd.read_csv(data_file)
-        df = df.drop(['sort', 'year', 'siteid', 'lat', 'long'], axis=1)  # drop columns I don't need
-        len_before = len(df)
-        df = df.dropna()  # drop any rows with unknown values
-        print('Downloaded NLA data')
-        print('Dropped {} rows for a total of {}'.format(len_before - len(df), len(df)))
-
-    xs = df.iloc[:, 4:]
-    x_names = df.columns.values[4:]
-    ts = df.iloc[:, 0:4]
-    t_names = df.columns.values[0:4]
-
-    xs = np.array(xs)
-    ts = np.array(ts)
-
-    return normalize(xs), ts, x_names, t_names
-
-
-def get_NRSA_data():
-    with open('./data/NRSA08_mldata.csv', 'r') as data_file:
-        df = pd.read_csv(data_file)
-        df = df.drop(['sort', 'year', 'siteid', 'lat', 'long', 'epareg', 'strorder'], axis=1)  # drop columns I don't need
-        len_before = len(df)
-        df = df.dropna()  # drop any rows with unknown values
-        print('Downloaded NRSA data')
-        print('Dropped {} rows for a total of {}'.format(len_before - len(df), len(df)))
-
-    xs = df.iloc[:, 4:]
-    x_names = df.columns.values[4:]
-    ts = df.iloc[:, 0:4]
-    t_names = df.columns.values[0:4]
-
-    xs = np.array(xs)
-    ts = np.array(ts)
-
-    return normalize(xs), ts, x_names, t_names
