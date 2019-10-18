@@ -35,9 +35,10 @@ def run(xs, ts, output_dir):
 
                 print('tr {}:\tL1: {}\tL2: {}'.format(str(model).split()[1], round(L1_tr, 3), round(L2_tr, 3)))
                 print('ts {}:\tL1: {}\tL2: {}'.format(str(model).split()[1], round(L1_ts, 3), round(L2_ts, 3)))
+            print()
 
 
-    with open(os.path.join(output_dir, 'accuracy.csv'), 'w') as res_file:
+    with open(os.path.join(output_dir, 'accuracy_imp.csv'), 'w') as res_file:
         res_writer = csv.writer(res_file)
         for t_ind, t_name in enumerate(ts.columns.values):
             res_writer.writerow([t_name])
@@ -52,11 +53,17 @@ def run(xs, ts, output_dir):
 
 if __name__ == '__main__':
     import sys
-    if sys.argv[1] == 'NRSA':
+    dataset = sys.argv[1]
+    
+    if dataset == 'NRSA':
         xs, ts = data.get_NRSA_data(for_training=True)
+        output_dir = './NRSA_output'
+    if dataset == 'NRSA2':
+        xs, ts = data.get_NRSA2_data(for_training=True)
+        output_dir = './NRSA2_output'
     else: 
         xs, ts = data.get_NLA_data(for_training=True)
-    output_dir = './NRSA_output' if sys.argv[1] == 'NRSA' else './NLA_output'
+        output_dir = './NLA_output'
 
     run(xs, ts, output_dir)
     

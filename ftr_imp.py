@@ -17,7 +17,7 @@ def run(xs, ts, output_dir):
     
     # set up plots
     f, axarr = plt.subplots(len(ts.columns.values), 2, sharex='col')
-    f.set_size_inches(14, 20)
+    f.set_size_inches(16, 20)
     axarr[0, 0].set_title('Random Forest')
     axarr[0, 1].set_title('Gradient Boosting')
     
@@ -46,14 +46,21 @@ def run(xs, ts, output_dir):
         plot_imp(rf_imps, xs.columns.values, axarr[i, 0])
         plot_imp(gb_imps, xs.columns.values, axarr[i, 1])
 
-    f.savefig(os.path.join(output_dir, 'ftr_imp_imputed_rem3.png'))
+    f.savefig(os.path.join(output_dir, 'ftr_imp.png'))
         
         
 if __name__ == '__main__':
     import sys
-    if sys.argv[1] == 'NRSA':
+    dataset = sys.argv[1]
+    
+    if dataset == 'NRSA':
         xs, ts = data.get_NRSA_data(for_training=True)
+        output_dir = './NRSA_output'
+    if dataset == 'NRSA2':
+        xs, ts = data.get_NRSA2_data(for_training=True)
+        output_dir = './NRSA2_output'
     else: 
         xs, ts = data.get_NLA_data(for_training=True)
-    output_dir = './NRSA_output' if sys.argv[1] == 'NRSA' else './NLA_output'
+        output_dir = './NLA_output'
+
     run(xs, ts, output_dir)
